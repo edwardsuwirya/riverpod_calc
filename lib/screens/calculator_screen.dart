@@ -21,23 +21,23 @@ class CalcScreen extends StatelessWidget {
               Column(
                 children: [
                   CalcButton(numberTitle: '9'),
-                  CalcButton(numberTitle: '8'),
-                  CalcButton(numberTitle: '7'),
+                  CalcButton(numberTitle: '6'),
+                  CalcButton(numberTitle: '3'),
                   const SizedBox(height: 48),
                 ],
               ),
               Column(
                 children: [
-                  CalcButton(numberTitle: '6'),
+                  CalcButton(numberTitle: '8'),
                   CalcButton(numberTitle: '5'),
-                  CalcButton(numberTitle: '4'),
+                  CalcButton(numberTitle: '2'),
                   CalcButton(numberTitle: '0'),
                 ],
               ),
               Column(
                 children: [
-                  CalcButton(numberTitle: '3'),
-                  CalcButton(numberTitle: '2'),
+                  CalcButton(numberTitle: '7'),
+                  CalcButton(numberTitle: '4'),
                   CalcButton(numberTitle: '1'),
                   const SizedBox(height: 48),
                 ],

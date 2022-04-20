@@ -11,7 +11,7 @@ class CalcButton extends StatelessWidget {
         onPressed: () {},
         child: Text(
           numberTitle,
-          style: TextStyle(fontSize: 24),
+          style: const TextStyle(fontSize: 24),
         ));
   }
 }
