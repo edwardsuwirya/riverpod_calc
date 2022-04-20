@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CalcDisplay extends StatelessWidget {
-  const CalcDisplay({Key? key}) : super(key: key);
+  String display;
+
+  CalcDisplay({Key? key, required this.display}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +17,10 @@ class CalcDisplay extends StatelessWidget {
           Radius.circular(10),
         ),
       ),
-      child: const Text(
-        '0',
+      child: Text(
+        display,
         textAlign: TextAlign.right,
-        style: TextStyle(fontSize: 24),
+        style: const TextStyle(fontSize: 24),
       ),
     );
   }
