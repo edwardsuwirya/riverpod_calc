@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_river_calc/screens/calculator/providers/calculator_provider.dart';
 
-class CalcDisplay extends StatelessWidget {
-  String display;
-
-  CalcDisplay({Key? key, required this.display}) : super(key: key);
+class CalcDisplay extends ConsumerWidget {
+  CalcDisplay({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final calc = ref.watch(calculatorViewModelProvider);
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.all(16),
@@ -18,7 +19,7 @@ class CalcDisplay extends StatelessWidget {
         ),
       ),
       child: Text(
-        display,
+        calc.display,
         textAlign: TextAlign.right,
         style: const TextStyle(fontSize: 24),
       ),
