@@ -1,40 +1,63 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_river_calc/models/calculator.dart';
+import 'package:my_river_calc/screens/calculator/providers/calculator_provider.dart';
 import 'package:my_river_calc/utils/calculator_operator.dart';
+import 'package:my_river_calc/utils/calculator_state_completion.dart';
 
 class CalculatorViewModel extends StateNotifier<Calculator> {
   final Ref ref;
 
-  CalculatorViewModel(this.ref) : super(Calculator(0, CalculatorOperator.none, '0', false));
+  CalculatorViewModel(this.ref)
+      : super(Calculator(0, CalculatorOperator.none, '0',
+            CalculatorStateCompletion.progress));
 
-  void onSetOperator(CalculatorOperator opr) {
-    if (opr == CalculatorOperator.equal) {
-      final num2 = int.parse(state.display);
-      String result = '0';
-      switch (state.operator) {
-        case CalculatorOperator.plus:
-          result = (state.num! + num2).toString();
-          break;
-        case CalculatorOperator.minus:
-          result = (state.num! - num2).toString();
-          break;
-        default:
-          result = state.display;
-      }
-      state = state.copyWith(display: result, operator: CalculatorOperator.none, isComplete: true);
-    } else {
-      if (state.operator == CalculatorOperator.none) {
+  void onSetOperator(CalculatorOperator opr) async {
+    try {
+      clear();
+      if (opr == CalculatorOperator.equal &&
+          state.operator != CalculatorOperator.none) {
+        final num2 = int.parse(state.display);
+        final calcApi = await ref.watch(calculatorApiRepoProvider.future);
+        final calcResult = await calcApi.calculatorComputation(
+            state.num!, num2, state.operator);
+        if (calcResult != null) {
+          state = state.copyWith(
+              num: 0,
+              display: calcResult.toString(),
+              operator: CalculatorOperator.none,
+              completeState: CalculatorStateCompletion.complete);
+        }
+      } else if (opr != CalculatorOperator.equal &&
+          state.operator == CalculatorOperator.none) {
         final num1 = int.parse(state.display);
-        state = state.copyWith(num: num1, display: '0', operator: opr);
-      }
+        state = state.copyWith(
+            num: num1,
+            display: '0',
+            operator: opr,
+            completeState: CalculatorStateCompletion.progress);
+      } else {}
+    } catch (e) {
+      state = state.copyWith(
+          num: 0,
+          display: '0',
+          operator: CalculatorOperator.none,
+          completeState: CalculatorStateCompletion.failed);
+    }
+  }
+
+  void clear() {
+    if (state.completeState == CalculatorStateCompletion.complete ||
+        state.completeState == CalculatorStateCompletion.failed) {
+      state = state.copyWith(
+          num: 0,
+          operator: CalculatorOperator.none,
+          display: '0',
+          completeState: CalculatorStateCompletion.progress);
     }
   }
 
   void onSetNum(String numTitle) {
-    if (state.isComplete) {
-      state =
-          state.copyWith(num: 0, operator: CalculatorOperator.none, display: '0', isComplete: false);
-    }
+    clear();
     if (state.display == '0') {
       state = state.copyWith(display: numTitle);
     } else {

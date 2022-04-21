@@ -12,14 +12,13 @@ class CalcButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final controller = ref.read(calculatorViewModelProvider.notifier);
     return ElevatedButton(
         onPressed: () {
           if (isOperator) {
-            ref
-                .read(calculatorViewModelProvider.notifier)
-                .onSetOperator(CalcOprToEnum(numberTitle));
+            controller.onSetOperator(CalcOprToEnum(numberTitle));
           } else {
-            ref.read(calculatorViewModelProvider.notifier).onSetNum(numberTitle);
+            controller.onSetNum(numberTitle);
           }
         },
         child: Text(
