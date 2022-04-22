@@ -6,8 +6,9 @@ import 'package:my_river_calc/screens/calculator/providers/calculator_viewmodel.
 
 final calculatorViewModelProvider =
     StateNotifierProvider<CalculatorViewModel, Calculator>(
-  (ref) => CalculatorViewModel(ref),
+  (ref) =>
+      CalculatorViewModel(calculatorApi: ref.watch(calculatorApiRepoProvider)),
 );
-final calculatorApiRepoProvider = FutureProvider<CalculatorApi>((ref) async {
+final calculatorApiRepoProvider = Provider<CalculatorApi>((ref) {
   return CalculatorApiImpl();
 });

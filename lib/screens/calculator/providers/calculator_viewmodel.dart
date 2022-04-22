@@ -1,14 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_river_calc/models/calculator.dart';
-import 'package:my_river_calc/screens/calculator/providers/calculator_provider.dart';
+import 'package:my_river_calc/repository/calculator_api.dart';
 import 'package:my_river_calc/utils/calculator_operator.dart';
 import 'package:my_river_calc/utils/calculator_state_completion.dart';
 
 class CalculatorViewModel extends StateNotifier<Calculator> {
-  final Ref ref;
+  final CalculatorApi _calcApi;
 
-  CalculatorViewModel(this.ref)
-      : super(Calculator(0, CalculatorOperator.none, '0',
+  CalculatorViewModel({required CalculatorApi calculatorApi})
+      : _calcApi = calculatorApi,
+        super(Calculator(0, CalculatorOperator.none, '0',
             CalculatorStateCompletion.progress));
 
   void onSetOperator(CalculatorOperator opr) async {
@@ -17,8 +18,7 @@ class CalculatorViewModel extends StateNotifier<Calculator> {
       if (opr == CalculatorOperator.equal &&
           state.operator != CalculatorOperator.none) {
         final num2 = int.parse(state.display);
-        final calcApi = await ref.watch(calculatorApiRepoProvider.future);
-        final calcResult = await calcApi.calculatorComputation(
+        final calcResult = await _calcApi.calculatorComputation(
             state.num!, num2, state.operator);
         if (calcResult != null) {
           state = state.copyWith(
